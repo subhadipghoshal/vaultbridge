@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import EntryCard from '../../components/EntryCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { newestFirst } from '../../lib/site';
+
+const projects = newestFirst(
+	(await getCollection('projects')).filter((entry) => entry.data.published === true),
+);
+---
+
+<BaseLayout title="Portfolio" description="Selected projects and engineering case studies.">
+	<section class="page-header">
+		<p class="eyebrow">Selected work</p>
+		<h1>Portfolio</h1>
+		<p>Projects and case studies with enough detail to make the engineering judgment visible.</p>
+	</section>
+	<section class="section">
+		{
+			projects.length > 0 ? (
+				<div class="entry-grid">
+					{projects.map((entry) => <EntryCard entry={entry} href={'/portfolio/' + entry.data.slug} />)}
+				</div>
+			) : (
+				<p class="empty-state">No portfolio projects have been published yet.</p>
+			)
+		}
+	</section>
+</BaseLayout>

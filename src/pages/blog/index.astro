@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import EntryCard from '../../components/EntryCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { newestFirst } from '../../lib/site';
+
+const articles = newestFirst(
+	(await getCollection('blog')).filter((entry) => entry.data.published === true),
+);
+---
+
+<BaseLayout title="Blog" description="Technical writing about systems, engineering, and tools.">
+	<section class="page-header">
+		<p class="eyebrow">Writing</p>
+		<h1>Blog</h1>
+		<p>Essays on systems, architecture, developer experience, and the work behind the work.</p>
+	</section>
+	<section class="section">
+		{
+			articles.length > 0 ? (
+				<div class="entry-grid">
+					{articles.map((entry) => <EntryCard entry={entry} href={'/blog/' + entry.data.slug} />)}
+				</div>
+			) : (
+				<p class="empty-state">No articles have been published yet.</p>
+			)
+		}
+	</section>
+</BaseLayout>

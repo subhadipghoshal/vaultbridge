@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import { site } from '../lib/site';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+const pageTitle = title === site.title ? site.title : title + ' — ' + site.title;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).toString();
+const navigation = [
+	{ href: '/', label: 'Home' },
+	{ href: '/portfolio', label: 'Portfolio' },
+	{ href: '/writing', label: 'Writing' },
+	{ href: '/about', label: 'About' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalUrl} />
+		<link rel="alternate" type="application/rss+xml" title={site.title + ' RSS'} href="/rss.xml" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
+		<title>{pageTitle}</title>
+	</head>
+	<body>
+		<a class="skip-link" href="#content">Skip to content</a>
+		<header class="site-header">
+			<a class="wordmark" href="/">{site.title}</a>
+			<nav aria-label="Primary navigation">
+				<ul>
+					{
+						navigation.map((item) => (
+							<li>
+								<a
+									href={item.href}
+									aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
+								>
+									{item.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+		</header>
+		<main id="content"><slot /></main>
+		<footer class="site-footer">
+			<p>Written in Markdown. Published intentionally.</p>
+			<a href="/rss.xml">RSS</a>
+		</footer>
+	</body>
+</html>

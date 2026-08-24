@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import EntryCard from '../../components/EntryCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { newestFirst } from '../../lib/site';
+
+const articles = newestFirst(
+	(await getCollection('blog')).filter((entry) => entry.data.published === true),
+);
+---
+
+<BaseLayout title="Writing" description="Technical writing and a future newsletter archive.">
+	<section class="page-header">
+		<p class="eyebrow">Writing</p>
+		<h1>Ideas worth keeping.</h1>
+		<p>
+			This archive is intentionally small. It contains only writing deliberately marked for
+			publication in the publish vault.
+		</p>
+	</section>
+	<section class="section">
+		{
+			articles.length > 0 ? (
+				<div class="entry-grid">
+					{articles.map((entry) => <EntryCard entry={entry} href={'/blog/' + entry.data.slug} />)}
+				</div>
+			) : (
+				<p class="empty-state">The first public article is still being prepared.</p>
+			)
+		}
+	</section>
+</BaseLayout>

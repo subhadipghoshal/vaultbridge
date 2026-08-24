@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../lib/site';
+
+interface Props {
+	entry: CollectionEntry<'blog'> | CollectionEntry<'projects'>;
+	href: string;
+}
+
+const { entry, href } = Astro.props;
+---
+
+<article class="entry-card">
+	<div class="entry-card__meta">
+		<span>{entry.data.type === 'article' ? 'Writing' : 'Selected work'}</span>
+		<span aria-hidden="true">·</span>
+		<time datetime={entry.data.updated.toISOString()}>{formatDate(entry.data.updated)}</time>
+	</div>
+	<h3><a href={href}>{entry.data.title}</a></h3>
+	<p>{entry.data.description}</p>
+	{
+		entry.data.topics.length > 0 && (
+			<ul class="topic-list" aria-label="Topics">
+				{entry.data.topics.map((topic) => <li>{topic}</li>)}
+			</ul>
+		)
+	}
+	<a class="text-link" href={href}>
+		Read {entry.data.type === 'article' ? 'article' : 'case study'} <span aria-hidden="true">→</span>
+	</a>
+</article>

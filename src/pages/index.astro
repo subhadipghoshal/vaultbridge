@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import EntryCard from '../components/EntryCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { newestFirst, site } from '../lib/site';
+
+const projects = newestFirst(
+	(await getCollection('projects')).filter((entry) => entry.data.published === true),
+);
+const featuredProjects = projects.filter((entry) => entry.data.featured).slice(0, 3);
+---
+
+<BaseLayout>
+	<section class="hero">
+		<p class="eyebrow">Portfolio and writing</p>
+		<h1>Clear systems, deliberate engineering, durable work.</h1>
+		<p class="hero__summary">
+			{site.title} documents systems thinking, technical decisions, and engineering work from
+			a local-first Markdown workflow.
+		</p>
+		<div class="hero__actions">
+			<a class="button" href="/portfolio">View selected work</a>
+			<a class="text-link" href="/writing">Read the writing <span aria-hidden="true">→</span></a>
+		</div>
+	</section>
+
+	<section class="section section--tint" aria-labelledby="selected-work">
+		<div class="section-heading">
+			<div>
+				<p class="eyebrow">Selected work</p>
+				<h2 id="selected-work">Portfolio</h2>
+			</div>
+			<a class="text-link" href="/portfolio">All projects <span aria-hidden="true">→</span></a>
+		</div>
+		{
+			featuredProjects.length > 0 ? (
+				<div class="entry-grid">
+					{featuredProjects.map((entry) => <EntryCard entry={entry} href={'/portfolio/' + entry.data.slug} />)}
+				</div>
+			) : (
+				<p>No public projects yet.</p>
+			)
+		}
+	</section>
+
+	<section class="section principles" aria-labelledby="working-principles">
+		<div>
+			<p class="eyebrow">Working principles</p>
+			<h2 id="working-principles">A portfolio should show the reasoning, not just the result.</h2>
+		</div>
+		<ul>
+			<li><strong>Context first.</strong> Start with the real problem and constraints.</li>
+			<li><strong>Tradeoffs included.</strong> Explain why a decision fit its moment.</li>
+			<li><strong>Impact grounded.</strong> Show what changed for users, teams, or systems.</li>
+		</ul>
+	</section>
+</BaseLayout>

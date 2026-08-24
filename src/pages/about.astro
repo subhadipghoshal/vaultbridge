@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/site';
+---
+
+<BaseLayout title="About" description={'About ' + site.title + ' and this Markdown-first portfolio.'}>
+	<section class="page-header">
+		<p class="eyebrow">About</p>
+		<h1>Engineering work, explained plainly.</h1>
+		<p>
+			This is a portfolio for systems work: the context, decisions, constraints, and outcomes
+			that rarely fit in a resume line.
+		</p>
+	</section>
+	<section class="prose prose--narrow">
+		<h2>How this site is maintained</h2>
+		<p>
+			Portfolio projects and public writing start as Markdown in a separate publish vault.
+			Private research lives elsewhere. Only documents explicitly marked for publication are
+			included in this website.
+		</p>
+		<p>
+			That separation keeps a personal knowledge store useful for thinking while making the
+			public surface predictable, reviewable, and portable.
+		</p>
+	</section>
+</BaseLayout>
